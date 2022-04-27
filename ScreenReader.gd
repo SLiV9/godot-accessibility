@@ -58,6 +58,18 @@ func augment_tree(node):
 		augment_tree(child)
 
 
+func set_initial_screen_focus(caused_by_key_press: bool = false):
+	var control = find_focusable_control(get_tree().root)
+	if control.get_focus_owner() != null:
+		return
+	var focus = find_focusable_control(get_tree().root)
+	if not focus:
+		return
+	should_stop_on_focus = caused_by_key_press
+	focus.grab_click_focus()
+	focus.grab_focus()
+
+
 func find_focusable_control(node):
 	if (
 		node is Control
