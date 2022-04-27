@@ -302,6 +302,16 @@ func _input(event):
 			get_tree().set_input_as_handled()
 
 
+func _unhandled_input(ev):
+	# Pressing Tab or trying to move around the UI should select some
+	# button to focus, even if the ScreenReader is disabled.
+	if (ev.is_action_pressed("ui_focus_next")
+			or ev.is_action_pressed("ui_focus_prev")
+			or ev.is_action_pressed("ui_up")
+			or ev.is_action_pressed("ui_down")):
+		set_initial_screen_focus(true)
+
+
 func _process(delta):
 	if not enabled:
 		return
