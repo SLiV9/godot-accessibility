@@ -749,6 +749,7 @@ func _init(node, reader, tts):
 	if node.is_in_group("accessible"):
 		return
 	node.add_to_group("accessible")
+	add_to_group("accessibles")
 	node.add_child(self)
 	self.node = node
 	if _is_focusable(node):

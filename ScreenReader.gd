@@ -15,7 +15,7 @@ var TtsClass = preload("../godot-tts/TTS.gd")
 
 var TTS
 
-export var enabled = true
+export var enabled = false setget _set_enabled
 
 export var min_swipe_distance = 5
 
@@ -28,6 +28,17 @@ export var enable_focus_mode = false
 export var logging = true
 
 var should_stop_on_focus = true
+
+
+func _set_enabled(v):
+	enabled = v
+	if enabled:
+		augment_tree(get_tree().root)
+	else:
+		for accessible in get_tree().get_nodes_in_group("accessibles"):
+			accessible.queue_free()
+		for node in get_tree().get_nodes_in_group("accessible"):
+			node.remove_from_group("accessible")
 
 
 func augment_node(node):
@@ -72,6 +83,8 @@ func _enter_tree():
 	else:
 		for accessible in get_tree().get_nodes_in_group("accessibles"):
 			accessible.queue_free()
+		for node in get_tree().get_nodes_in_group("accessible"):
+			node.remove_from_group("accessible")
 	_safe_connect(get_tree(), "node_added", self, "augment_node")
 	_safe_connect(self, "swipe_right", self, "swipe_right")
 	_safe_connect(self, "swipe_left", self, "swipe_left")
