@@ -592,6 +592,14 @@ func tab_container_input(event):
 		node.current_tab = new_tab
 
 
+func _texture_rect_drawn():
+	if node.has_focus():
+		var focused = node.get_stylebox("focused", "TextureRect")
+		if focused != null:
+			var rect = Rect2(Vector2(0, 0), node.rect_size)
+			node.draw_style_box(focused, rect)
+
+
 func focused():
 	if screen_reader.logging:
 		print_debug("Focus: %s" % node)
@@ -639,6 +647,10 @@ func focused():
 		_texturebutton_focused()
 	elif node is Tree:
 		tree_focused()
+	elif node is TextureRect:
+		pass
+	elif node is ColorRect:
+		pass
 	else:
 		TTS.speak(node.get_class(), true)
 		if screen_reader.logging:
@@ -716,6 +728,10 @@ func _is_focusable(node):
 		or node.get_class() == "Control"
 	):
 		return false
+	if node is ColorRect:
+		return false
+	if node is TextureRect:
+		return not node.hint_tooltip.empty()
 	return true
 
 
@@ -783,6 +799,8 @@ func _init(node, reader, tts):
 		node.connect("value_changed", self, "range_value_changed")
 	elif node is TabContainer:
 		node.connect("tab_changed", self, "tab_container_tab_changed")
+	elif node is TextureRect:
+		node.connect("draw", self, "_texture_rect_drawn")
 	elif node is Tree:
 		node.connect("item_collapsed", self, "_tree_item_collapsed")
 		node.connect("multi_selected", self, "tree_item_multi_selected")
