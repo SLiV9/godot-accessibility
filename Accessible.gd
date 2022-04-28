@@ -697,6 +697,13 @@ func gui_input(event):
 		return editor_inspector_section_input(event)
 
 
+func _is_decorative(node):
+	return (node is Control
+		and node.focus_mode == Control.FOCUS_NONE
+		and node.mouse_filter == Control.MOUSE_FILTER_IGNORE
+		and node.mouse_default_cursor_shape == Control.CURSOR_FORBIDDEN)
+
+
 func _is_focusable(node):
 	if node.is_class("SceneTreeEditor"):
 		return false
@@ -759,6 +766,8 @@ func editor_inspector_section_input(event):
 
 
 func _init(node, reader, tts):
+	if _is_decorative(node):
+		return
 	screen_reader = reader
 	TTS = tts
 	name = "Accessible for " + node.name
